@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Controller {
+	public static ArrayList<Person> arrList = new PeopleList(true).getPeopleList();
     
     @RequestMapping("/")
     public String homePage() {
@@ -24,10 +25,47 @@ public class Controller {
     
     @RequestMapping(value = "/activities/people", method = RequestMethod.POST)
     public PeopleList getPeopleListByActivity(@RequestParam(value="activityType", defaultValue="Hack") 
-    											String activityType) {
+    											String activityType, @RequestParam(value="name", defaultValue="Joe Shmoe") 
+                                                String name, @RequestParam(value="long", defaultValue="-73.985428") 
+                                                double longitude, @RequestParam(value="lat", defaultValue="40.748817") 
+                                                double latitude) {
+    		// add person to list and return updated list
+        arrList.add(new Person(name, activityType, longitude, latitude));
         
-    		ArrayList<Person> arrList = new PeopleList(true).getPeopleList();
-        PeopleList listToReturn = new PeopleList(false);
+        return filterListByActivity(activityType);
+    }
+    
+    @RequestMapping(value = "/activities/people", method = RequestMethod.GET)
+    public PeopleList getPeopleListByActivity(@RequestParam(value="activityType", defaultValue="Hack") 
+    											String activityType) {
+    		// return unmodified list
+    		return filterListByActivity(activityType);
+    }
+    
+    @RequestMapping(value = "/activities/people", method = RequestMethod.DELETE)
+    public boolean getPeopleListByActivity(@RequestParam(value="activityType", defaultValue="") 
+    											String activityType, @RequestParam(value="name", defaultValue="") 
+                                                String name) {
+    		// delete a user from the list and return whether deletion was successful
+    		int index = -1;
+        for (int i = 0; i < arrList.size(); i++) {
+        		Person p = arrList.get(i);
+        		if (p.getActivity().equalsIgnoreCase(activityType) && p.getName().equalsIgnoreCase(name)) {
+        			index = i;
+        			break;
+        		}
+        }
+        
+        if (index != -1) {
+        		arrList.remove(index);
+        		return true;
+        } else {
+        		return false;
+        }
+    }
+    
+    public PeopleList filterListByActivity(String activityType) {
+    		PeopleList listToReturn = new PeopleList(false);
         
         // only return people with same activity
         // PS, there is a better way to do this but demoing...
@@ -40,5 +78,7 @@ public class Controller {
         
         return listToReturn;
     }
+    
+    
 
 }
