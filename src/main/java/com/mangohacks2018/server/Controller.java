@@ -24,7 +24,7 @@ public class Controller {
     }
     
     @RequestMapping(value = "/activities/people", method = RequestMethod.POST)
-    public PeopleList getPeopleListByActivity(@RequestParam(value="activityType", defaultValue="Hack") 
+    public PeopleList addPersonToList(@RequestParam(value="activityType", defaultValue="Hack") 
     											String activityType, @RequestParam(value="name", defaultValue="Joe Shmoe") 
                                                 String name, @RequestParam(value="long", defaultValue="-73.985428") 
                                                 double longitude, @RequestParam(value="lat", defaultValue="40.748817") 
@@ -43,7 +43,7 @@ public class Controller {
     }
     
     @RequestMapping(value = "/activities/people", method = RequestMethod.DELETE)
-    public boolean getPeopleListByActivity(@RequestParam(value="activityType", defaultValue="") 
+    public boolean deletePersonFromList(@RequestParam(value="activityType", defaultValue="") 
     											String activityType, @RequestParam(value="name", defaultValue="") 
                                                 String name) {
     		// delete a user from the list and return whether deletion was successful
